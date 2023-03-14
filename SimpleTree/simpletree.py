@@ -19,9 +19,7 @@ class SimpleTree:
         child_nodes = parent_node.Children
 
         for node in child_nodes:
-            child_nodes = child_nodes + self._get_all_child(node)
-            # Это не работает и я не понимаю, почему
-            # child_nodes += self._get_all_child(node)
+            child_nodes += self._get_all_child(node)
 
         return child_nodes
 
