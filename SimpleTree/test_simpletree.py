@@ -111,6 +111,34 @@ def test_get_children_of_children():
                                        child_1_lvl_3}) is None
 
 
+def test_check_children_immutability():
+    root = SimpleTreeNode(1)
+    tree = SimpleTree(root)
+
+    child_1_lvl_1 = SimpleTreeNode(1)
+    child_2_lvl_1 = SimpleTreeNode(1)
+    child_1_lvl_2 = SimpleTreeNode(1)
+    child_2_lvl_2 = SimpleTreeNode(1)
+    child_3_lvl_2 = SimpleTreeNode(1)
+    child_1_lvl_3 = SimpleTreeNode(1)
+
+    tree.AddChild(root, child_1_lvl_1)
+    tree.AddChild(root, child_2_lvl_1)
+    tree.AddChild(child_1_lvl_1, child_1_lvl_2)
+    tree.AddChild(child_1_lvl_1, child_2_lvl_2)
+    tree.AddChild(child_1_lvl_1, child_3_lvl_2)
+    tree.AddChild(child_1_lvl_2, child_1_lvl_3)
+
+    tree._get_all_child(root)
+
+    assert set(root.Children) == set([child_1_lvl_1, child_2_lvl_1])
+    assert set(child_1_lvl_1.Children) == set([child_1_lvl_2, child_2_lvl_2, child_3_lvl_2])
+    assert set(child_1_lvl_2.Children) == {child_1_lvl_3}
+    assert len(child_2_lvl_2.Children) == 0
+    assert len(child_3_lvl_2.Children) == 0
+    assert len(child_1_lvl_3.Children) == 0
+
+
 # def test_delete():
 #     root = SimpleTreeNode(5, None)
 #     tree = SimpleTree(root)
