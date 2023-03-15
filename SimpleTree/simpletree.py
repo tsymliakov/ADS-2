@@ -16,7 +16,7 @@ class SimpleTree:
         if len(parent_node.Children) == 0:
             return []
 
-        child_nodes = parent_node.Children
+        child_nodes = parent_node.Children[:]
 
         for node in child_nodes:
             child_nodes += self._get_all_child(node)
