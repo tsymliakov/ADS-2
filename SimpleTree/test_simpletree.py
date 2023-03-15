@@ -217,7 +217,7 @@ def test_count_leaf_2_nodes_same_lvl():
     assert tree.LeafCount() == 2
 
 
-def test_count_leaf_harder():
+def test_count_leaf_complex():
     root = SimpleTreeNode(1)
     tree = SimpleTree(root)
 
@@ -442,3 +442,59 @@ def test_delete_half_nodes():
 
     for node in nodes_must_stay:
         assert node in nodes_after_deletion
+
+
+# Test MoveNode
+
+def test_move_plain():
+    root = SimpleTreeNode('root')
+    tree = SimpleTree(root)
+
+    children = [
+        SimpleTreeNode(1),
+        SimpleTreeNode(1),
+        SimpleTreeNode(1),
+        SimpleTreeNode(1),
+        SimpleTreeNode(1)
+    ]
+
+    for c in children:
+        tree.AddChild(root, c)
+
+    tree.MoveNode(children[1], children[0])
+    tree.MoveNode(children[2], children[1])
+    tree.MoveNode(children[3], children[2])
+    tree.MoveNode(children[4], children[3])
+
+    nodes = tree.GetAllNodes()
+    children.append(root)
+    assert len(nodes) == len(children)
+    for c in children:
+        assert c in nodes
+
+
+def test_move_complex():
+    root = SimpleTreeNode('root')
+    tree = SimpleTree(root)
+
+    child_1_lvl_1 = SimpleTreeNode('1_1')
+    child_2_lvl_1 = SimpleTreeNode('2_1')
+    child_1_lvl_2 = SimpleTreeNode('1_2')
+    child_2_lvl_2 = SimpleTreeNode('2_2')
+    child_3_lvl_2 = SimpleTreeNode('3_2')
+    child_1_lvl_3 = SimpleTreeNode('1_3')
+    child_2_lvl_3 = SimpleTreeNode('2_3')
+    child_3_lvl_3 = SimpleTreeNode('3_3')
+
+    tree.AddChild(root, child_1_lvl_1)
+    tree.AddChild(root, child_2_lvl_1)
+    tree.AddChild(child_1_lvl_1, child_1_lvl_2)
+    tree.AddChild(child_1_lvl_1, child_2_lvl_2)
+    tree.AddChild(child_1_lvl_1, child_3_lvl_2)
+    tree.AddChild(child_1_lvl_2, child_1_lvl_3)
+    tree.AddChild(child_2_lvl_2, child_2_lvl_3)
+    tree.AddChild(child_2_lvl_2, child_3_lvl_3)
+
+    tree.MoveNode(child_2_lvl_3, root)
+    assert child_2_lvl_3 not in child_2_lvl_2.Children
+    assert child_2_lvl_3 in root.Children

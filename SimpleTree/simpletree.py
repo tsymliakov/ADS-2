@@ -23,12 +23,8 @@ class SimpleTree:
     def DeleteNode(self, NodeToDelete: SimpleTreeNode):
         parent = NodeToDelete.Parent
         if parent is not None:
-            parent.Children = [child for child in parent.Children if child is not NodeToDelete]
-
-        # founded_parent = self._find_parent_of_node(self.Root, NodeToDelete)
-        # if founded_parent is not None:
-        #     founded_parent.Children = [child for child in founded_parent.Children if child is not
-        #                                NodeToDelete]
+            parent.Children = [
+                child for child in parent.Children if child is not NodeToDelete]
 
     def _find_parent_of_node(self, node: SimpleTreeNode, node_to_delete: SimpleTreeNode) -> SimpleTreeNode:
         if len(node.Children) == 0:
@@ -59,7 +55,7 @@ class SimpleTree:
 
         for child in child_nodes:
             # Its insane :-/
-            # I don't understand why searching stops work if 
+            # I don't understand why searching stops work if
             # child_nodes += self._get_all_child(child)
             child_nodes = child_nodes + self._get_all_child(child)
 
@@ -69,10 +65,18 @@ class SimpleTree:
         all_nodes = self.GetAllNodes()
         return [node for node in all_nodes if node.NodeValue == val]
 
-    def MoveNode(self, OriginalNode, NewParent):
-        # ваш код перемещения узла вместе с его поддеревом --
-        # в качестве дочернего для узла NewParent
-        pass
+    def MoveNode(self, OriginalNode: SimpleTreeNode, NewParent: SimpleTreeNode):
+        if OriginalNode is self.Root:
+            return
+        if OriginalNode is NewParent:
+            return
+
+        parent_of_orig = OriginalNode.Parent
+        parent_of_orig.Children = [c for c in parent_of_orig.Children if
+                                   c is not OriginalNode]
+
+        NewParent.Children.append(OriginalNode)
+
 
     def Count(self):
         return self._count_all_nodes(self.Root)
