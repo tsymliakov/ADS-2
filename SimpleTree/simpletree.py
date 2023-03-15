@@ -10,53 +10,64 @@ class SimpleTree:
 
     def __init__(self, root: SimpleTreeNode):
         self.Root = root  # корень, может быть None
-        self.nodes = [root]
-
-    def _get_all_child(self, parent_node):
-        if len(parent_node.Children) == 0:
-            return []
-
-        child_nodes = parent_node.Children[:]
-
-        for node in child_nodes:
-            child_nodes += self._get_all_child(node)
-
-        return child_nodes
-
-
 
     def AddChild(self, ParentNode: SimpleTreeNode, NewChild: SimpleTreeNode):
         if not isinstance(ParentNode, SimpleTreeNode):
             raise ValueError('ParentNode isn\'t SimpleTreeNode object.')
         if not isinstance(NewChild, SimpleTreeNode):
             raise ValueError('NewChild isn\'t SimpleTreeNode object.')
-        if ParentNode not in self.nodes:
-            pass #raise ValueError('ParentNode doesn\'t belong to tree.')
 
         ParentNode.Children.append(NewChild)
         NewChild.Parent = ParentNode
-        self.nodes.append(NewChild)
 
-    def DeleteNode(self, NodeToDelete):
-        if NodeToDelete is self.Root:
+    def DeleteNode(self, NodeToDelete: SimpleTreeNode):
+        parent = NodeToDelete.Parent
+        if parent is not None:
+            parent.Children = [child for child in parent.Children if child is not NodeToDelete]
+
+        # founded_parent = self._find_parent_of_node(self.Root, NodeToDelete)
+        # if founded_parent is not None:
+        #     founded_parent.Children = [child for child in founded_parent.Children if child is not
+        #                                NodeToDelete]
+
+    def _find_parent_of_node(self, node: SimpleTreeNode, node_to_delete: SimpleTreeNode) -> SimpleTreeNode:
+        if len(node.Children) == 0:
             return
-        
-        # Нужно получить ссылки на все дочерние узлы и применить к ним ко всем
-        # оператор del
 
+        parent_node = None
 
+        for child in node.Children:
+            if child is node_to_delete:
+                parent_node = node
+                return parent_node
 
-
-
-        pass  # ваш код удаления существующего узла NodeToDelete
+        for child in node.Children:
+            parent_node = self._find_parent_of_node(child, node_to_delete)
+            if parent_node:
+                return parent_node
 
     def GetAllNodes(self):
-        # ваш код выдачи всех узлов дерева в определённом порядке
-        return []
+        all_nodes = [self.Root]
+        all_nodes.extend(self._get_all_child(self.Root))
+        return all_nodes
+
+    def _get_all_child(self, node):
+        if len(node.Children) == 0:
+            return []
+
+        child_nodes = node.Children[:]
+
+        for child in child_nodes:
+            # Its insane :-/
+            # I don't understand why searching stops work if 
+            # child_nodes += self._get_all_child(child)
+            child_nodes = child_nodes + self._get_all_child(child)
+
+        return child_nodes
 
     def FindNodesByValue(self, val):
-        # ваш код поиска узлов по значению
-        return []
+        all_nodes = self.GetAllNodes()
+        return [node for node in all_nodes if node.NodeValue == val]
 
     def MoveNode(self, OriginalNode, NewParent):
         # ваш код перемещения узла вместе с его поддеревом --
@@ -64,9 +75,30 @@ class SimpleTree:
         pass
 
     def Count(self):
-        # количество всех узлов в дереве
-        return 0
+        return self._count_all_nodes(self.Root)
+
+    def _count_all_nodes(self, node: SimpleTreeNode):
+        counted_nodes = 1
+
+        if len(node.Children) == 0:
+            return counted_nodes
+
+        for child in node.Children:
+            counted_nodes += self._count_all_nodes(child)
+
+        return counted_nodes
 
     def LeafCount(self):
-        # количество листьев в дереве
-        return 0
+        return self._count_all_leaf(self.Root)
+
+    def _count_all_leaf(self, node: SimpleTreeNode):
+        leaf_count = 0
+
+        if len(node.Children) == 0:
+            leaf_count = 1
+            return leaf_count
+
+        for child in node.Children:
+            leaf_count += self._count_all_leaf(child)
+
+        return leaf_count
