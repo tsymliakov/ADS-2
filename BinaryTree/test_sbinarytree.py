@@ -31,19 +31,29 @@ def give_tree_and_nodes():
     nodes['r_rc_lc'] = r_rc_lc
     nodes['r_rc_rc'] = r_rc_rc
 
-    return {'tree' : tree, 'nodes' : nodes}
+    return {'tree': tree, 'nodes': nodes}
+
+
+# Test FindKey
+def test_FindNodeByKey_empty():
+    tree = BST(None)
+
+    search_res = tree.FindNodeByKey(1)
+
+    assert isinstance(search_res, BSTFind)
+    assert search_res.Node is None
 
 
 def test_FindNodeByKey_all_nodes():
     tree_nodes = give_tree_and_nodes()
-    tree : BST = tree_nodes['tree']
+    tree: BST = tree_nodes['tree']
     nodes = tree_nodes['nodes']
-    r_lc = nodes['r_lc'] # 4
-    r_rc = nodes['r_rc'] # 12
-    r_lc_lc = nodes['r_lc_lc'] # 2
-    r_lc_rc = nodes['r_lc_rc'] # 6
-    r_rc_lc = nodes['r_rc_lc'] # 10
-    r_rc_rc = nodes['r_rc_rc'] # 14
+    r_lc = nodes['r_lc']  # 4
+    r_rc = nodes['r_rc']  # 12
+    r_lc_lc = nodes['r_lc_lc']  # 2
+    r_lc_rc = nodes['r_lc_rc']  # 6
+    r_rc_lc = nodes['r_rc_lc']  # 10
+    r_rc_rc = nodes['r_rc_rc']  # 14
 
     assert tree.FindNodeByKey(8).Node is tree.Root
     assert tree.FindNodeByKey(4).Node is r_lc
@@ -56,14 +66,14 @@ def test_FindNodeByKey_all_nodes():
 
 def test_FindNodeByKey_all_possible_leafs_withot_swaping_childs():
     tree_nodes = give_tree_and_nodes()
-    tree : BST = tree_nodes['tree']
+    tree: BST = tree_nodes['tree']
     nodes = tree_nodes['nodes']
-    r_lc = nodes['r_lc'] # 4
-    r_rc = nodes['r_rc'] # 12
-    r_lc_lc = nodes['r_lc_lc'] # 2
-    r_lc_rc = nodes['r_lc_rc'] # 6
-    r_rc_lc = nodes['r_rc_lc'] # 10
-    r_rc_rc = nodes['r_rc_rc'] # 14
+    r_lc = nodes['r_lc']  # 4
+    r_rc = nodes['r_rc']  # 12
+    r_lc_lc = nodes['r_lc_lc']  # 2
+    r_lc_rc = nodes['r_lc_rc']  # 6
+    r_rc_lc = nodes['r_rc_lc']  # 10
+    r_rc_rc = nodes['r_rc_rc']  # 14
 
     result_bstfind = tree.FindNodeByKey(1)
     assert result_bstfind.Node is r_lc_lc
@@ -106,4 +116,166 @@ def test_FindNodeByKey_all_possible_leafs_withot_swaping_childs():
     assert result_bstfind.ToLeft is False
 
 
+# Test AddKeyValue
+def test_addkey_empty():
+    tree = BST(None)
+    tree.AddKeyValue(key=5, val=10)
 
+    assert tree.Root.NodeKey == 5
+    assert tree.Root.NodeValue == 10
+    assert tree.Root.Parent is None
+    assert tree.Root.LeftChild is None
+    assert tree.Root.RightChild is None
+
+
+def test_addkey_left_right():
+    root = BSTNode(5, 10, None)
+    tree = BST(root)
+
+    tree.AddKeyValue(3, 10)
+    tree.AddKeyValue(7, 10)
+
+    assert root.LeftChild.NodeKey == 3
+    assert root.RightChild.NodeKey == 7
+
+
+def test_addkey_left_exists():
+    root = BSTNode(5, 10, None)
+    tree = BST(root)
+
+    tree.AddKeyValue(3, 10)
+    left_root_child = root.LeftChild
+
+    tree.AddKeyValue(3, 5)
+
+    assert root.LeftChild.NodeValue == 10
+    assert left_root_child is root.LeftChild
+
+
+def test_addkey_right_exists():
+    root = BSTNode(5, 10, None)
+    tree = BST(root)
+
+    tree.AddKeyValue(7, 10)
+    right_root_child = root.RightChild
+
+    tree.AddKeyValue(7, 5)
+
+    assert root.RightChild.NodeValue == 10
+    assert right_root_child is root.RightChild
+
+
+def test_addkey_complex_1():
+    tree = BST(None)
+
+    for i in range(0, 4):
+        tree.AddKeyValue(i, 5)
+
+    assert tree.Root.NodeKey == 0
+    assert tree.Root.RightChild.NodeKey == 1
+    assert tree.Root.RightChild.RightChild.NodeKey == 2
+    assert tree.Root.RightChild.RightChild.RightChild.NodeKey == 3
+
+
+def test_addkey_complex_2():
+    tree = BST(None)
+
+    for i in range(3, -1, -1):
+        tree.AddKeyValue(i, 5)
+
+    assert tree.Root.NodeKey == 3
+    assert tree.Root.LeftChild.NodeKey == 2
+    assert tree.Root.LeftChild.LeftChild.NodeKey == 1
+    assert tree.Root.LeftChild.LeftChild.LeftChild.NodeKey == 0
+
+
+def test_addkey_complex_3():
+    pass
+
+
+# Test FinMinMax
+def test_find_min_from_root():
+    tree_nodes = give_tree_and_nodes()
+    tree = tree_nodes['tree']
+
+    min_key_node = tree.FinMinMax(tree.Root, False)
+    assert min_key_node.NodeKey == 2
+
+
+def test_find_max_from_root():
+    tree_nodes = give_tree_and_nodes()
+    tree = tree_nodes['tree']
+
+    min_key_node = tree.FinMinMax(tree.Root, True)
+    assert min_key_node.NodeKey == 14
+
+
+def test_find_min_in_subtree():
+    tree_nodes = give_tree_and_nodes()
+    tree = tree_nodes['tree']
+    nodes = tree_nodes['nodes']
+
+    min_key_node = tree.FinMinMax(nodes['r_lc'], False)
+    assert min_key_node.NodeKey == 2
+
+
+def test_find_max_in_subtree():
+    tree_nodes = give_tree_and_nodes()
+    tree = tree_nodes['tree']
+    nodes = tree_nodes['nodes']
+
+    min_key_node = tree.FinMinMax(nodes['r_lc'], True)
+    assert min_key_node.NodeKey == 6
+
+
+# Test Count
+def test_count_empty():
+    tree = BST(None)
+
+    assert tree.Count() == 0
+
+
+def test_count_only_root():
+    root = BSTNode(1, 1, None)
+    tree = BST(root)
+
+    assert tree.Count() == 1
+
+
+def test_count_1():
+    tree = give_tree_and_nodes()['tree']
+
+    assert tree.Count() == 7
+
+
+def test_count_2():
+    tree = BST(None)
+    for i in range(100):
+        tree.AddKeyValue(i, 1)
+
+    assert tree.Count() == 100
+
+
+# Test DeleteNodeByKey
+
+def test_delete_1():
+    root = BSTNode(5, 1, None)
+    tree = BST(root)
+
+    tree.AddKeyValue(2, 1)
+    tree.AddKeyValue(7, 1)
+
+    tree.DeleteNodeByKey(2)
+    assert root.LeftChild is None
+
+def test_delete_complex():
+    tree_nodes = give_tree_and_nodes()
+    tree : BST = tree_nodes['tree']
+
+    tree.DeleteNodeByKey(4)
+    assert tree.FindNodeByKey(4).NodeHasKey is False
+    assert tree.DeleteNodeByKey(4) is False
+
+    tree.DeleteNodeByKey(6)
+    assert tree.Root.LeftChild.NodeKey == 2
+    assert tree.Root.LeftChild.Parent is tree.Root
