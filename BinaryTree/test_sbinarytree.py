@@ -1,3 +1,4 @@
+from itertools import count
 from sbinarytree import *
 
 
@@ -36,6 +37,31 @@ def give_tree_and_nodes():
     return {'tree': tree, 'nodes': nodes}
 
 
+def tree_links_ok(tree: BST):
+    root = tree.Root
+    if root is not None:
+        return _check_links(root, None)
+    return True
+
+
+def _check_links(node, node_parent):
+    if node.Parent is not node_parent:
+        return False
+    if node.LeftChild:
+        if node.RightChild:
+            return _check_links(node.LeftChild, node) and _check_links(node.RightChild, node)
+        return _check_links(node.LeftChild, node)
+    if node.RightChild:
+        return _check_links(node.RightChild, node)
+    return True
+
+
+def test_tree_links_ok():
+    tree = BST(BSTNode(10, 1, None))
+    tree.Root.LeftChild = BSTNode(5, 1, BSTNode(7, 1, tree.Root))
+    assert tree_links_ok(tree) is False
+
+
 # Test FindKey
 def test_FindNodeByKey_empty():
     tree = BST(None)
@@ -44,6 +70,7 @@ def test_FindNodeByKey_empty():
 
     assert isinstance(search_res, BSTFind)
     assert search_res.Node is None
+    assert tree_links_ok(tree) is True
 
 
 def test_FindNodeByKey_all_nodes():
@@ -64,6 +91,8 @@ def test_FindNodeByKey_all_nodes():
     assert tree.FindNodeByKey(6).Node is r_lc_rc
     assert tree.FindNodeByKey(10).Node is r_rc_lc
     assert tree.FindNodeByKey(14).Node is r_rc_rc
+
+    assert tree_links_ok(tree) is True
 
 
 def test_FindNodeByKey_all_possible_leafs_withot_swaping_childs():
@@ -117,6 +146,8 @@ def test_FindNodeByKey_all_possible_leafs_withot_swaping_childs():
     assert result_bstfind.NodeHasKey is False
     assert result_bstfind.ToLeft is False
 
+    assert tree_links_ok(tree) is True
+
 
 # Test AddKeyValue
 def test_addkey_empty():
@@ -129,6 +160,8 @@ def test_addkey_empty():
     assert tree.Root.LeftChild is None
     assert tree.Root.RightChild is None
 
+    assert tree_links_ok(tree) is True
+
 
 def test_addkey_left_right():
     root = BSTNode(5, 10, None)
@@ -139,6 +172,8 @@ def test_addkey_left_right():
 
     assert root.LeftChild.NodeKey == 3
     assert root.RightChild.NodeKey == 7
+
+    assert tree_links_ok(tree) is True
 
 
 def test_addkey_left_exists():
@@ -153,6 +188,8 @@ def test_addkey_left_exists():
     assert root.LeftChild.NodeValue == 10
     assert left_root_child is root.LeftChild
 
+    assert tree_links_ok(tree) is True
+
 
 def test_addkey_right_exists():
     root = BSTNode(5, 10, None)
@@ -166,6 +203,8 @@ def test_addkey_right_exists():
     assert root.RightChild.NodeValue == 10
     assert right_root_child is root.RightChild
 
+    assert tree_links_ok(tree) is True
+
 
 def test_addkey_complex_1():
     tree = BST(None)
@@ -178,6 +217,8 @@ def test_addkey_complex_1():
     assert tree.Root.RightChild.RightChild.NodeKey == 2
     assert tree.Root.RightChild.RightChild.RightChild.NodeKey == 3
 
+    assert tree_links_ok(tree) is True
+
 
 def test_addkey_complex_2():
     tree = BST(None)
@@ -189,6 +230,8 @@ def test_addkey_complex_2():
     assert tree.Root.LeftChild.NodeKey == 2
     assert tree.Root.LeftChild.LeftChild.NodeKey == 1
     assert tree.Root.LeftChild.LeftChild.LeftChild.NodeKey == 0
+
+    assert tree_links_ok(tree) is True
 
 
 # Test FinMinMax
@@ -257,15 +300,16 @@ def test_count_2():
 # Test DeleteNodeByKey
 def test_delete_root():
     tree_nodes = give_tree_and_nodes()
-    tree : BST = tree_nodes['tree']
+    tree: BST = tree_nodes['tree']
 
     tree.DeleteNodeByKey(8)
     assert tree.Root is None
+    assert tree_links_ok(tree) is True
 
 
 def test_delete_no_child():
     tree_nodes = give_tree_and_nodes()
-    tree : BST = tree_nodes['tree']
+    tree: BST = tree_nodes['tree']
     nodes = tree_nodes['nodes']
 
     count_before = tree.Count()
@@ -276,6 +320,8 @@ def test_delete_no_child():
     assert nodes['r_lc'].RightChild is nodes['r_lc_rc']
     assert nodes['r_lc'].Parent is tree.Root
     assert nodes['r_lc_rc'].Parent is nodes['r_lc']
+
+    assert tree_links_ok(tree) is True
 
 
 def test_delete_only_right_child():
@@ -303,6 +349,8 @@ def test_delete_only_right_child():
     assert tree.FindNodeByKey(20).NodeHasKey is True
     assert tree.FindNodeByKey(16).NodeHasKey is True
 
+    assert tree_links_ok(tree) is True
+
 
 def test_delete_only_left_child():
     tree = BST(BSTNode(10, 1, None))
@@ -329,6 +377,8 @@ def test_delete_only_left_child():
     assert tree.FindNodeByKey(12).NodeHasKey is True
     assert tree.FindNodeByKey(14).NodeHasKey is True
 
+    assert tree_links_ok(tree) is True
+
 
 def test_delete_all_two_child_1():
     tree = BST(BSTNode(10, 1, None))
@@ -340,13 +390,19 @@ def test_delete_all_two_child_1():
     print(repr(node_12))
     node_17 = tree.FindNodeByKey(17).Node
 
+    count_before = tree.Count()
+
     tree.DeleteNodeByKey(15)
+
+    assert tree.Count() == count_before - 1
 
     assert tree.Root.RightChild is node_17
     assert node_17.Parent is tree.Root
 
     assert node_17.LeftChild is node_12
     assert node_12.Parent is node_17
+
+    assert tree_links_ok(tree) is True
 
 
 def test_delete_all_two_child_2():
@@ -362,7 +418,11 @@ def test_delete_all_two_child_2():
     node_17 = tree.FindNodeByKey(17).Node
     node_18 = tree.FindNodeByKey(18).Node
 
+    count_before = tree.Count()
+
     tree.DeleteNodeByKey(15)
+
+    assert tree.Count() == count_before - 1
 
     assert tree.Root.RightChild is node_16
     assert node_16.Parent is tree.Root
@@ -373,3 +433,34 @@ def test_delete_all_two_child_2():
     assert node_17.LeftChild is None
     assert node_17.RightChild is node_18
     assert node_18.Parent is node_17
+
+    assert tree_links_ok(tree) is True
+
+
+def test_delete_all_two_child_3():
+    tree = BST(BSTNode(10, 1, None))
+    tree.AddKeyValue(8, 1)
+    tree.AddKeyValue(15, 1)
+    tree.AddKeyValue(12, 1)
+    tree.AddKeyValue(21, 1)
+    tree.AddKeyValue(23, 1)
+    tree.AddKeyValue(17, 1)
+    tree.AddKeyValue(19, 1)
+    tree.AddKeyValue(18, 1)
+    tree.AddKeyValue(20, 1)
+
+    count_before = tree.Count()
+
+    tree.DeleteNodeByKey(15)
+
+    assert tree.Count() == count_before - 1
+
+    assert tree_links_ok(tree)
+    assert tree.FindNodeByKey(15).NodeHasKey is False
+    assert tree.FindNodeByKey(21).NodeHasKey is True
+    assert tree.FindNodeByKey(23).NodeHasKey is True
+    assert tree.FindNodeByKey(19).NodeHasKey is True
+    assert tree.FindNodeByKey(18).NodeHasKey is True
+    assert tree.FindNodeByKey(20).NodeHasKey is True
+    assert tree.FindNodeByKey(12).NodeHasKey is True
+
