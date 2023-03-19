@@ -16,6 +16,9 @@ class BSTNode:
         self.LeftChild = None  # левый потомок
         self.RightChild = None  # правый потомок
 
+    def __repr__(self):
+        return (f'Node {self.NodeKey}')
+
 
 class BSTFind:  # промежуточный результат поиска
 
@@ -92,6 +95,7 @@ class BST:
             if curr_node.RightChild is None:
                 return curr_node
             curr_node = curr_node.RightChild
+        return curr_node
 
     def DeleteNodeByKey(self, key):
         search_result = self.FindNodeByKey(key)
@@ -100,32 +104,64 @@ class BST:
         # Значит, нода существует и её надо удалить
         if search_result.Node is self.Root:
             self.Root = None
+            return True
 
-        removable_node : BSTNode = search_result.Node
+        removable_node: BSTNode = search_result.Node
 
         if not removable_node.LeftChild:
             if not removable_node.RightChild:
                 # Нет потомков. Нужно убрать ссылку из parent'а
                 # родительского узла
                 self._remove_child_from_parent(removable_node)
-                return
-                
-            # Есть только правый
-            pass
-        
-        if removable_node.RightChild:
-            # У ноды есть два дочерних узла. Делаем грязь
-            pass
+                return True
+            # Есть только правый. Нужно в правом потомке поменять
+            # родителя, а родителю назначить новый узел
+            self._move_node(removable_node.RightChild, removable_node.Parent)
+            return True
 
-        # У удаляемой ноды есть только левый потомок
+        if removable_node.RightChild:
+            # У ноды есть два дочерних узла. Делаем грязь.
+            # Нужно найти минимальную ноду в поддереве правого потомка
+            r_child_subtree_min_key = self.FinMinMax(
+                removable_node.RightChild, False)
+            # Найденная нода может иметь либо 0 потомков, либо потомка
+            # справа (иначе нашлась бы другая нода с меньшим значением)
+            if r_child_subtree_min_key.RightChild is None:
+                # Она лист. В таком случае о её дочерних узлах можно не
+                # беспокоиться.
+                # Нужно присобачить правую ноду удаляемой к найденной. 
+                # А затем поставить найденную на место удаляемой
+                self._move_node(r_child_subtree_min_key, removable_node.Parent)
+                if removable_node.LeftChild:
+                    self._move_node(removable_node.LeftChild, r_child_subtree_min_key)
+                if removable_node.RightChild:
+                    self._move_node(removable_node.RightChild, r_child_subtree_min_key)
+                return True
+            # У найденной ноды есть потомок справа. В этом случае
+            
+            return True
+
+        self._move_node(removable_node.LeftChild, removable_node.Parent)
+
+    def _move_node(self, node_to_move, parent):
+        '''Вырежет node_to_move из дерева из её родителя и присоединит к
+        parent на основании ключа.'''
+        is_left = node_to_move.NodeKey < parent.NodeKey
+        self._remove_child_from_parent(node_to_move)
+        node_to_move.Parent = parent
+        if is_left:
+            parent.LeftChild = node_to_move
+            return
+        parent.RightChild = node_to_move
 
     def _remove_child_from_parent(self, child):
+        '''Обрезает все связи child с его родительской нодой'''
         parent = child.Parent
+        child.Parent = None
         if parent.LeftChild is child:
             parent.LeftChild = None
             return
         parent.RightChild = None
-
 
     def Count(self):
         if self.Root is None:

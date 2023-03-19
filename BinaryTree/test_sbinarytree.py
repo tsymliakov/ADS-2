@@ -262,38 +262,114 @@ def test_delete_root():
     tree.DeleteNodeByKey(8)
     assert tree.Root is None
 
+
 def test_delete_no_child():
     tree_nodes = give_tree_and_nodes()
     tree : BST = tree_nodes['tree']
     nodes = tree_nodes['nodes']
 
-    start_count = tree.Count()
+    count_before = tree.Count()
 
     tree.DeleteNodeByKey(2)
-    assert tree.Count() == start_count - 1
+    assert tree.Count() == count_before - 1
     assert nodes['r_lc'].LeftChild is None
     assert nodes['r_lc'].RightChild is nodes['r_lc_rc']
     assert nodes['r_lc'].Parent is tree.Root
     assert nodes['r_lc_rc'].Parent is nodes['r_lc']
 
-def test_delete_1():
-    root = BSTNode(5, 1, None)
-    tree = BST(root)
 
-    tree.AddKeyValue(2, 1)
-    tree.AddKeyValue(7, 1)
+def test_delete_only_right_child():
+    tree = BST(BSTNode(10, 1, None))
+    tree.AddKeyValue(15, 1)
+    tree.AddKeyValue(18, 1)
+    tree.AddKeyValue(16, 1)
+    tree.AddKeyValue(20, 1)
 
-    tree.DeleteNodeByKey(2)
-    assert root.LeftChild is None
+    del_node = tree.FindNodeByKey(15).Node
+    child = tree.FindNodeByKey(18).Node
 
-def test_delete_complex():
-    tree_nodes = give_tree_and_nodes()
-    tree : BST = tree_nodes['tree']
+    count_before = tree.Count()
 
-    tree.DeleteNodeByKey(4)
-    assert tree.FindNodeByKey(4).NodeHasKey is False
-    assert tree.DeleteNodeByKey(4) is False
+    assert del_node.Parent is tree.Root
+    assert del_node.LeftChild is None
+    assert del_node.RightChild is child
+    assert child.Parent is del_node
 
-    tree.DeleteNodeByKey(6)
-    assert tree.Root.LeftChild.NodeKey == 2
-    assert tree.Root.LeftChild.Parent is tree.Root
+    tree.DeleteNodeByKey(15)
+
+    assert tree.Count() == count_before - 1
+    assert tree.Root.RightChild is child
+    assert child.Parent is tree.Root
+    assert tree.FindNodeByKey(20).NodeHasKey is True
+    assert tree.FindNodeByKey(16).NodeHasKey is True
+
+
+def test_delete_only_left_child():
+    tree = BST(BSTNode(10, 1, None))
+    tree.AddKeyValue(15, 1)
+    tree.AddKeyValue(13, 1)
+    tree.AddKeyValue(12, 1)
+    tree.AddKeyValue(14, 1)
+
+    del_node = tree.FindNodeByKey(15).Node
+    child = tree.FindNodeByKey(13).Node
+
+    count_before = tree.Count()
+
+    assert del_node.Parent is tree.Root
+    assert del_node.RightChild is None
+    assert del_node.LeftChild is child
+    assert child.Parent is del_node
+
+    tree.DeleteNodeByKey(15)
+
+    assert tree.Count() == count_before - 1
+    assert tree.Root.RightChild is child
+    assert child.Parent is tree.Root
+    assert tree.FindNodeByKey(12).NodeHasKey is True
+    assert tree.FindNodeByKey(14).NodeHasKey is True
+
+
+def test_delete_all_two_child_1():
+    tree = BST(BSTNode(10, 1, None))
+    tree.AddKeyValue(15, 1)
+    tree.AddKeyValue(12, 1)
+    tree.AddKeyValue(17, 1)
+
+    node_12 = tree.FindNodeByKey(12).Node
+    print(repr(node_12))
+    node_17 = tree.FindNodeByKey(17).Node
+
+    tree.DeleteNodeByKey(15)
+
+    assert tree.Root.RightChild is node_17
+    assert node_17.Parent is tree.Root
+
+    assert node_17.LeftChild is node_12
+    assert node_12.Parent is node_17
+
+
+def test_delete_all_two_child_2():
+    tree = BST(BSTNode(10, 1, None))
+    tree.AddKeyValue(15, 1)
+    tree.AddKeyValue(12, 1)
+    tree.AddKeyValue(17, 1)
+    tree.AddKeyValue(16, 1)
+    tree.AddKeyValue(18, 1)
+
+    node_12 = tree.FindNodeByKey(12).Node
+    node_16 = tree.FindNodeByKey(16).Node
+    node_17 = tree.FindNodeByKey(17).Node
+    node_18 = tree.FindNodeByKey(18).Node
+
+    tree.DeleteNodeByKey(15)
+
+    assert tree.Root.RightChild is node_16
+    assert node_16.Parent is tree.Root
+    assert node_16.LeftChild is node_12
+    assert node_12.Parent is node_16
+    assert node_16.RightChild is node_17
+    assert node_17.Parent is node_16
+    assert node_17.LeftChild is None
+    assert node_17.RightChild is node_18
+    assert node_18.Parent is node_17
