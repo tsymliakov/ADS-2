@@ -1,12 +1,3 @@
-from http import server
-from multiprocessing import Value
-from platform import node
-from re import search
-from tkinter import N
-from tkinter.messagebox import NO
-from xmlrpc.client import Boolean
-
-
 class BSTNode:
 
     def __init__(self, key, val, parent):
@@ -81,20 +72,23 @@ class BST:
         search_result.Node.RightChild = child_node
         return True
 
-    def FinMinMax(self, FromNode, FindMax: Boolean):
+    def FinMinMax(self, FromNode, FindMax: bool):
         if not isinstance(FromNode, BSTNode):
             return None
+
         curr_node = FromNode
 
-        if FindMax is False:
-            while curr_node is not None:
-                if curr_node.LeftChild is None:
-                    return curr_node
-                curr_node = curr_node.LeftChild
+        def get_next(node, FindMax):
+            if FindMax:
+                return node.RightChild
+            return node.LeftChild
+
         while curr_node is not None:
-            if curr_node.RightChild is None:
+            next = get_next(curr_node, FindMax)
+            if next is None:
                 return curr_node
-            curr_node = curr_node.RightChild
+            curr_node = next
+
         return curr_node
 
     def DeleteNodeByKey(self, key):
