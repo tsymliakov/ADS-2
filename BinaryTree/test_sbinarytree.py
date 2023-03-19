@@ -1,6 +1,8 @@
 from sbinarytree import *
 
 
+# It would be better to replace this function with a class with tree and
+# nodes attribute
 def give_tree_and_nodes():
     root = BSTNode(8, 1, None)
     tree = BST(root)
@@ -189,10 +191,6 @@ def test_addkey_complex_2():
     assert tree.Root.LeftChild.LeftChild.LeftChild.NodeKey == 0
 
 
-def test_addkey_complex_3():
-    pass
-
-
 # Test FinMinMax
 def test_find_min_from_root():
     tree_nodes = give_tree_and_nodes()
@@ -257,6 +255,26 @@ def test_count_2():
 
 
 # Test DeleteNodeByKey
+def test_delete_root():
+    tree_nodes = give_tree_and_nodes()
+    tree : BST = tree_nodes['tree']
+
+    tree.DeleteNodeByKey(8)
+    assert tree.Root is None
+
+def test_delete_no_child():
+    tree_nodes = give_tree_and_nodes()
+    tree : BST = tree_nodes['tree']
+    nodes = tree_nodes['nodes']
+
+    start_count = tree.Count()
+
+    tree.DeleteNodeByKey(2)
+    assert tree.Count() == start_count - 1
+    assert nodes['r_lc'].LeftChild is None
+    assert nodes['r_lc'].RightChild is nodes['r_lc_rc']
+    assert nodes['r_lc'].Parent is tree.Root
+    assert nodes['r_lc_rc'].Parent is nodes['r_lc']
 
 def test_delete_1():
     root = BSTNode(5, 1, None)

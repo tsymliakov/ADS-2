@@ -94,7 +94,38 @@ class BST:
             curr_node = curr_node.RightChild
 
     def DeleteNodeByKey(self, key):
-        return False
+        search_result = self.FindNodeByKey(key)
+        if search_result.NodeHasKey is False:
+            return False
+        # Значит, нода существует и её надо удалить
+        if search_result.Node is self.Root:
+            self.Root = None
+
+        removable_node : BSTNode = search_result.Node
+
+        if not removable_node.LeftChild:
+            if not removable_node.RightChild:
+                # Нет потомков. Нужно убрать ссылку из parent'а
+                # родительского узла
+                self._remove_child_from_parent(removable_node)
+                return
+                
+            # Есть только правый
+            pass
+        
+        if removable_node.RightChild:
+            # У ноды есть два дочерних узла. Делаем грязь
+            pass
+
+        # У удаляемой ноды есть только левый потомок
+
+    def _remove_child_from_parent(self, child):
+        parent = child.Parent
+        if parent.LeftChild is child:
+            parent.LeftChild = None
+            return
+        parent.RightChild = None
+
 
     def Count(self):
         if self.Root is None:
