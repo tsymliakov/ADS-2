@@ -1,6 +1,5 @@
 # I don't use imports because the test environment can react
 # unpredictably to them
-import tkinter
 from turtle import left
 
 
@@ -184,9 +183,102 @@ class BST:
 
 class TraversalBST(BST):
     def WideAllNodes(self) -> tuple[BSTNode]:
-        """Производит обход всего дерева в ширину"""
-        pass
+        """Производит обход всего дерева в ширину."""
+        if not self.Root:
+            return ()
+        h = self._height(self.Root)
 
-    def DeepAllNodes(self) -> tuple[BSTNode]:
-        """Производит обход всего дерева в глубину"""
-        pass
+        nodes = [self.Root]
+
+        for lvl in range(1, h):
+            nodes.extend(self._add_nodes_of_lvl(self.Root, 1, lvl))
+
+        return tuple(nodes)
+
+    def _add_nodes_of_lvl(self, node, curr_lvl, need_lvl):
+        if not node:
+            return []
+        if curr_lvl == need_lvl:
+            nodes_same_lvl = []
+            if node.LeftChild:
+                nodes_same_lvl.append(node.LeftChild)
+            if node.RightChild:
+                nodes_same_lvl.append(node.RightChild)
+            return nodes_same_lvl
+        if curr_lvl < need_lvl:
+            return (self._add_nodes_of_lvl(node.LeftChild, curr_lvl + 1, need_lvl) +
+                    self._add_nodes_of_lvl(node.RightChild, curr_lvl + 1, need_lvl))
+        return []
+
+    def _height(self, node: BSTNode) -> int:
+        if not node:
+            return 0
+
+        l_height = r_height = 0
+
+        if node.LeftChild:
+            l_height = self._height(node.LeftChild)
+        if node.RightChild:
+            r_height = self._height(node.RightChild)
+
+        return max(l_height, r_height) + 1
+
+    def DeepAllNodes(self, order: int) -> tuple[BSTNode]:
+        """Производит обход всего дерева в глубину.
+
+        order == 0 - in-order
+
+        order == 1 - post-order
+
+        order == 2 - pre-order
+        """
+        if order == 0:
+            return tuple(self._deep_in_order(self.Root))
+        if order == 1:
+            return tuple(self._deep_post_order(self.Root))
+        if order == 2:
+            return tuple(self._deep_pre_order(self.Root))
+
+    def _deep_in_order(self, node):
+        if not node:
+            return []
+        nodes = []
+
+        if node.LeftChild:
+            nodes.extend(self._deep_in_order(node.LeftChild))
+
+        nodes.append(node)
+
+        if node.RightChild:
+            nodes.extend(self._deep_in_order(node.RightChild))
+
+        return nodes
+
+    def _deep_post_order(self, node):
+        if not node:
+            return []
+        nodes = []
+
+        if node.LeftChild:
+            nodes.extend(self._deep_post_order(node.LeftChild))
+
+        if node.RightChild:
+            nodes.extend(self._deep_post_order(node.RightChild))
+
+        nodes.append(node)
+
+        return nodes
+
+    def _deep_pre_order(self, node):
+        if not node:
+            return []
+
+        nodes = [node]
+
+        if node.LeftChild:
+            nodes.extend(self._deep_pre_order(node.LeftChild))
+
+        if node.RightChild:
+            nodes.extend(self._deep_pre_order(node.RightChild))
+
+        return nodes
