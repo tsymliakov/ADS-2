@@ -180,8 +180,6 @@ class BST:
             nodes += self._count(node.RightChild)
         return nodes
 
-
-class TraversalBST(BST):
     def WideAllNodes(self) -> tuple[BSTNode]:
         """Производит обход всего дерева в ширину."""
         if not self.Root:

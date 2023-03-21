@@ -4,18 +4,18 @@ from traversaltree import *
 # Test wide
 
 def test_wide_empty():
-    tree = TraversalBST(None)
+    tree = BST(None)
     assert tree.WideAllNodes() == ()
 
 
 def test_wide_only_root():
     root = BSTNode(10, 1, None)
-    tree = TraversalBST(root)
+    tree = BST(root)
     assert tree.WideAllNodes() == (root,)
 
 
 def test_wide_1():
-    tree = TraversalBST(BSTNode(8, 1, None))
+    tree = BST(BSTNode(8, 1, None))
     tree.AddKeyValue(4, 1)
     tree.AddKeyValue(12, 1)
     tree.AddKeyValue(2, 1)
@@ -31,7 +31,7 @@ def test_wide_1():
 
 
 def test_wide_2():
-    tree = TraversalBST(BSTNode(10, 1, None))
+    tree = BST(BSTNode(10, 1, None))
     tree.AddKeyValue(5, 1)
     tree.AddKeyValue(15, 1)
     tree.AddKeyValue(0, 1)
@@ -47,7 +47,7 @@ def test_wide_2():
 
 
 def test_wide_3():
-    tree = TraversalBST(BSTNode(100, 1, None))
+    tree = BST(BSTNode(100, 1, None))
     tree.AddKeyValue(50, 1)
     tree.AddKeyValue(101, 1)
     tree.AddKeyValue(25, 1)
@@ -76,18 +76,18 @@ def test_wide_3():
 # Test deep
 
 def test_deep_in_order_empty():
-    tree = TraversalBST(None)
+    tree = BST(None)
     assert tree.DeepAllNodes(0) == ()
 
 
 def test_deep_in_order_root():
     root = BSTNode(10, 1, None)
-    tree = TraversalBST(root)
+    tree = BST(root)
     assert tree.DeepAllNodes(0) == (root,)
 
 
 def test_deep_in_order_1():
-    tree = TraversalBST(BSTNode(8, 1, None))
+    tree = BST(BSTNode(8, 1, None))
     tree.AddKeyValue(4, 1)
     tree.AddKeyValue(12, 1)
     tree.AddKeyValue(2, 1)
@@ -103,7 +103,7 @@ def test_deep_in_order_1():
 
 
 def test_deep_in_order_2():
-    tree = TraversalBST(BSTNode(100, 1, None))
+    tree = BST(BSTNode(100, 1, None))
     tree.AddKeyValue(50, 1)
     tree.AddKeyValue(101, 1)
     tree.AddKeyValue(25, 1)
@@ -130,7 +130,7 @@ def test_deep_in_order_2():
 
 
 def test_deep_post_order_1():
-    tree = TraversalBST(BSTNode(10, 1, None))
+    tree = BST(BSTNode(10, 1, None))
     tree.AddKeyValue(5, 1)
     tree.AddKeyValue(15, 1)
     tree.AddKeyValue(2, 1)
@@ -147,7 +147,7 @@ def test_deep_post_order_1():
 
 
 def test_deep_post_order_2():
-    tree = TraversalBST(BSTNode(100, 1, None))
+    tree = BST(BSTNode(100, 1, None))
     tree.AddKeyValue(50, 1)
     tree.AddKeyValue(101, 1)
     tree.AddKeyValue(25, 1)
@@ -174,7 +174,7 @@ def test_deep_post_order_2():
 
 
 def test_deep_pre_order_1():
-    tree = TraversalBST(BSTNode(10, 1, None))
+    tree = BST(BSTNode(10, 1, None))
     tree.AddKeyValue(5, 1)
     tree.AddKeyValue(15, 1)
     tree.AddKeyValue(2, 1)
@@ -191,7 +191,7 @@ def test_deep_pre_order_1():
 
 
 def test_deep_pre_order_2():
-    tree = TraversalBST(BSTNode(100, 1, None))
+    tree = BST(BSTNode(100, 1, None))
     tree.AddKeyValue(50, 1)
     tree.AddKeyValue(101, 1)
     tree.AddKeyValue(25, 1)
