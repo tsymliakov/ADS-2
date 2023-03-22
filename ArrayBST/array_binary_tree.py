@@ -45,6 +45,9 @@ class aBST:
             self.Tree[index] = key
             return index
 
+        if self.Tree[index] == key:
+            return index
+
         left_child_index = 2 * index + 1
         if left_child_index >= len(self.Tree):
             return -1

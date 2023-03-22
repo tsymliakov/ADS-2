@@ -40,6 +40,13 @@ def test_add_3():
                          84, None, None, 31, 43, 55, None, None, 92]
 
 
+def test_add_4():
+    tree = aBST(1)
+    assert tree.AddKey(0) == 0
+    assert tree.AddKey(5) == 2
+    assert tree.AddKey(5) == 2
+
+
 # Test Find
 
 def test_find_1():
