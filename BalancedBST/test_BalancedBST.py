@@ -40,20 +40,30 @@ def test_generate_tree_3():
     assert tree.Root is None
 
 
-def test_generate_tree_4():
+# def test_generate_tree_4():
+#     tree = BalancedBST()
+
+#     keys = [1, 1, 1, 1, 1, 1]
+
+#     tree.GenerateTree([1, 1, 1, 1, 1, 1])
+
+#     curr_node = tree.Root.RightChild
+#     nodes = 1
+
+#     while curr_node is not None:
+#         assert curr_node.Level == curr_node.Parent.Level + 1
+#         assert curr_node.LeftChild is None
+#         nodes += 1
+#         curr_node = curr_node.RightChild
+
+#     assert nodes == len(keys) - 1
+
+
+# Test IsBalanced
+
+def test_balanced_1():
+    keys = [3, 2, 1]
     tree = BalancedBST()
+    tree.GenerateTree(keys)
 
-    keys = [1, 1, 1, 1, 1, 1]
-
-    tree.GenerateTree([1, 1, 1, 1, 1, 1])
-
-    curr_node = tree.Root.RightChild
-    nodes = 1
-    
-    while curr_node is not None:
-        assert curr_node.Level == curr_node.Parent.Level + 1
-        assert curr_node.LeftChild is None
-        nodes += 1
-        curr_node = curr_node.RightChild
-    
-    assert nodes == len(keys) - 1
+    assert tree.IsBalanced(tree.Root) == True

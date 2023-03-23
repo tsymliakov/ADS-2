@@ -1,3 +1,6 @@
+from logging import root
+
+
 class BSTNode:
 
     def __init__(self, key, parent):
@@ -50,4 +53,38 @@ class BalancedBST:
         return new_node
 
     def IsBalanced(self, root_node):
-        return False  # сбалансировано ли дерево с корнем root_node
+        # Дерево является сбалансированным если его правое и левое
+        # поддеревья сбалансированны. А также если глубина левого и
+        # правого поддеревьев различаются менее, чем на 2.
+        if root_node is None:
+            return True
+
+        left_deep = self._get_deep_another(root_node.LeftChild, 1)
+        right_deep = self._get_deep_another(root_node.LeftChild, 1)
+
+        if abs(left_deep - right_deep) > 1:
+            return False
+
+        if self.IsBalanced(root_node.LeftChild) is False:
+            return False
+        if self.IsBalanced(root_node.RightChild) is False:
+            return False
+
+        return self.IsBalanced(root_node.LeftChild) and self.IsBalanced(root_node.RightChild)
+
+    def _get_deep(self, node: BSTNode, curr_lvl):
+        if not node.LeftChild:
+            if not node.RightChild:
+                return curr_lvl
+            return self._get_deep(node.RightChild, curr_lvl + 1)
+
+        if not node.RightChild:
+            return self._get_deep(node.LeftChild, curr_lvl + 1)
+
+        return max(self._get_deep(node.LeftChild, curr_lvl + 1), self._get_deep(node.RightChild, curr_lvl + 1))
+
+    def _get_deep_another(self, node: BSTNode, curr_lvl):
+        if node is None:
+            return curr_lvl - 1
+
+        return max(self._get_deep_another(node.LeftChild, curr_lvl + 1), self._get_deep_another(node.RightChild, curr_lvl + 1))
