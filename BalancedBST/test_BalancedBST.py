@@ -67,3 +67,19 @@ def test_balanced_1():
     tree.GenerateTree(keys)
 
     assert tree.IsBalanced(tree.Root) == True
+
+
+def test_balanced_2():
+    tree = BalancedBST()
+    tree.Root = BSTNode(1, None)
+
+    assert tree.IsBalanced(tree.Root) == True
+
+
+def test_balanced_3():
+    tree = BalancedBST()
+    tree.Root = BSTNode(5, None)
+    tree.Root.LeftChild = BSTNode(2, tree.Root)
+    tree.Root.LeftChild.LeftChild = BSTNode(2, tree.Root.LeftChild)
+
+    assert tree.IsBalanced(tree.Root) == False

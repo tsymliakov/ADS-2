@@ -60,7 +60,7 @@ class BalancedBST:
             return True
 
         left_deep = self._get_deep_another(root_node.LeftChild, 1)
-        right_deep = self._get_deep_another(root_node.LeftChild, 1)
+        right_deep = self._get_deep_another(root_node.RightChild, 1)
 
         if abs(left_deep - right_deep) > 1:
             return False
