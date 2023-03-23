@@ -62,8 +62,6 @@ class BalancedBST:
             self._put_level_in_nodes(node.RightChild, lvl + 1)
 
     def _generate_tree(self, keys: list, parent: BSTNode, start, end):
-        # todo: ключ правого равен или больше ключа предка. А ключ
-        # левого всегда меньше
         key_for_node_index = (start + end) // 2
         new_node = BSTNode(keys[key_for_node_index], parent)
 
