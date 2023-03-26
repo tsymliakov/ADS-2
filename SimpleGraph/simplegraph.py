@@ -36,9 +36,7 @@ class SimpleGraph:
         if not self._are_indexies_ok(v1, v2):
             return None
 
-        if self.m_adjacency[v1][v2] > 0:
-            return True
-        return False
+        return self.m_adjacency[v1][v2] > 0
 
     def AddEdge(self, v1, v2):
         if not self._are_indexies_ok(v1, v2):
