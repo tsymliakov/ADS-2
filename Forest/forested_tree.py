@@ -43,9 +43,11 @@ class SimpleTree:
             if parent_node:
                 return parent_node
 
-    def GetAllNodes(self):
-        all_nodes = [self.Root]
-        all_nodes.extend(self._get_all_child(self.Root))
+    def GetAllNodes(self, node=None):
+        if node is None:
+            node = self.Root
+        all_nodes = [node]
+        all_nodes.extend(self._get_all_child(node))
         return all_nodes
 
     def _get_all_child(self, node):
@@ -108,49 +110,16 @@ class SimpleTree:
         return leaf_count
 
     def EvenTrees(self):
-        l_adjacency = self.AdjacencyList(self.Root)
+        if self.Count() % 2 != 0:
+            return []
 
-    def _get_subtrees(self, edges, node1, node2):
-        """Удаляет связь в копии списка смежности и возвращает два
-        списка смежности результирующих поддеревьев."""
-        edge_to_delete = None
-        for i in range(len(edges)):
-            if edges[i][0] is node1 and edges[i][1] is node2:
-                edge_to_delete = i
-                break
-            if edges[i][0] is node2 and edges[i][1] is node1:
-                edge_to_delete = i
-                break
-        if edge_to_delete is None:
-            return
-
-        edges_after_deletion = edges[:edge_to_delete] + \
-            edges[edge_to_delete + 1:]
-
-        def _get_edges_of_subtree(subtree_edges, edges):
-            for edge in edges:
-                if subtree_edges[-1][1] is edge[0]:
-                    subtree_edges.append(edge)
-                    _get_edges_of_subtree(subtree_edges, edges)
-                    break
-
-        subtree_1_root = edges[0]
-        subtree_1 = [subtree_1_root]
-        _get_edges_of_subtree(subtree_1, edges_after_deletion)
-
-        subtree_2_root = edges[edge_to_delete + 1]
-        subtree_2 = [subtree_2_root]
-        _get_edges_of_subtree(subtree_2, edges_after_deletion)
-
-        return (subtree_1, subtree_2)
-
-    def AdjacencyList(self, node):
-        l_adj = []
-        self._get_adjacency_list(node, l_adj)
-        return l_adj
-
-    def _get_adjacency_list(self, node: SimpleTreeNode, linked_nodes: list):
-        for child in node.Children:
-            linked_nodes.append([node, child])
-            self._get_adjacency_list(child, linked_nodes)
-        return []
+        lifs = [i for i in self.GetAllNodes() if len(i.Children) == 0]
+        node_connection = []
+        for i in range(len(lifs)):
+            node = lifs[i]
+            while node.Parent != self.Root:
+                if self._count_all_nodes(node.Parent) % 2 == 0 and node.Parent not in node_connection:
+                    node_connection.append(node.Parent.Parent)
+                    node_connection.append(node.Parent)
+                node = node.Parent
+        return node_connection
