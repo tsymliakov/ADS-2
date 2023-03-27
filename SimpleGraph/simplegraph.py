@@ -1,6 +1,3 @@
-from operator import index
-
-
 class Vertex:
 
     def __init__(self, val):
