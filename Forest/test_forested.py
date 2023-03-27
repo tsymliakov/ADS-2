@@ -40,4 +40,3 @@ def test_eventrees_3():
     tree.AddChild(node5, node6)
 
     assert set(tree.EvenTrees()) == set([node2, node3, node4, node5])
-

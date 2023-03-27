@@ -5,7 +5,7 @@ class SimpleTreeNode:
         self.Children = []  # список дочерних узлов
 
     def __repr__(self) -> str:
-        return f'{self.NodeValue}'
+        return f"{self.NodeValue}"
 
 
 class SimpleTree:
@@ -14,9 +14,9 @@ class SimpleTree:
 
     def AddChild(self, ParentNode: SimpleTreeNode, NewChild: SimpleTreeNode):
         if not isinstance(ParentNode, SimpleTreeNode):
-            raise ValueError('ParentNode isn\'t SimpleTreeNode object.')
+            raise ValueError("ParentNode isn't SimpleTreeNode object.")
         if not isinstance(NewChild, SimpleTreeNode):
-            raise ValueError('NewChild isn\'t SimpleTreeNode object.')
+            raise ValueError("NewChild isn't SimpleTreeNode object.")
 
         ParentNode.Children.append(NewChild)
         NewChild.Parent = ParentNode
@@ -24,10 +24,11 @@ class SimpleTree:
     def DeleteNode(self, NodeToDelete: SimpleTreeNode):
         parent = NodeToDelete.Parent
         if parent is not None:
-            parent.Children = [
-                child for child in parent.Children if child is not NodeToDelete]
+            parent.Children = [child for child in parent.Children if child is not NodeToDelete]
 
-    def _find_parent_of_node(self, node: SimpleTreeNode, node_to_delete: SimpleTreeNode) -> SimpleTreeNode:
+    def _find_parent_of_node(
+        self, node: SimpleTreeNode, node_to_delete: SimpleTreeNode
+    ) -> SimpleTreeNode:
         if len(node.Children) == 0:
             return
 
@@ -75,22 +76,23 @@ class SimpleTree:
             return
 
         parent_of_orig = OriginalNode.Parent
-        parent_of_orig.Children = [c for c in parent_of_orig.Children if
-                                   c is not OriginalNode]
+        parent_of_orig.Children = [c for c in parent_of_orig.Children if c is not OriginalNode]
 
         NewParent.Children.append(OriginalNode)
 
-    def Count(self):
-        return self._count_all_nodes(self.Root)
+    def Count(self, node=None):
+        if self.Root is None:
+            return 0
+        if node is None:
+            node = self.Root
 
-    def _count_all_nodes(self, node: SimpleTreeNode):
         counted_nodes = 1
 
         if len(node.Children) == 0:
             return counted_nodes
 
         for child in node.Children:
-            counted_nodes += self._count_all_nodes(child)
+            counted_nodes += self.Count(child)
 
         return counted_nodes
 
@@ -110,16 +112,29 @@ class SimpleTree:
         return leaf_count
 
     def EvenTrees(self):
-        if self.Count() % 2 != 0:
+        count_nodes = self.Count()
+        if count_nodes == 0:
+            return []
+        if count_nodes % 2 != 0:
             return []
 
-        lifs = [i for i in self.GetAllNodes() if len(i.Children) == 0]
-        node_connection = []
-        for i in range(len(lifs)):
-            node = lifs[i]
-            while node.Parent != self.Root:
-                if self._count_all_nodes(node.Parent) % 2 == 0 and node.Parent not in node_connection:
-                    node_connection.append(node.Parent.Parent)
-                    node_connection.append(node.Parent)
-                node = node.Parent
-        return node_connection
+        edges_to_delete = []
+
+        leafs = [node for node in self.GetAllNodes(self.Root) if len(node.Children) == 0]
+
+        all_nodes = set(self.GetAllNodes())
+        for leaf in leafs:
+            if leaf.Parent is self.Root or leaf.Parent.Parent is self.Root:
+                continue
+
+            curr_node = leaf.Parent
+
+            while curr_node.Parent is not self.Root:
+                subtree = self.GetAllNodes(curr_node)
+
+                if len(subtree) % 2 == 0 and curr_node.Parent:
+                    edges_to_delete.extend([curr_node.Parent, curr_node])
+
+                curr_node = curr_node.Parent
+
+        return edges_to_delete
