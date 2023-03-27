@@ -134,11 +134,11 @@ def test_removevertex_1():
 def test_removevertex_2():
     g = SimpleGraph(5)
 
-    g.AddVertex('A') # 0
-    g.AddVertex('B') # 1
-    g.AddVertex('C') # 2
-    g.AddVertex('D') # 3
-    g.AddVertex('E') # 4
+    g.AddVertex('A')  # 0
+    g.AddVertex('B')  # 1
+    g.AddVertex('C')  # 2
+    g.AddVertex('D')  # 3
+    g.AddVertex('E')  # 4
 
     g.AddEdge(0, 1)
     g.AddEdge(0, 2)
@@ -170,4 +170,3 @@ def test_removevertex_2():
         [0, 1, 1, 1, 1],
         [0, 1, 0, 1, 0]
     ]
-

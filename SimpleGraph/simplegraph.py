@@ -13,7 +13,7 @@ class SimpleGraph:
 
     def AddVertex(self, v):
         index_of_empty = self._get_empty()
-        if index_of_empty == None:
+        if index_of_empty is None:
             return
 
         self.vertex[index_of_empty] = Vertex(v)
@@ -78,6 +78,6 @@ class SimpleGraph:
     def _are_there_vertexes(self, *indexies):
         """Проверяет, сушествуют ли вершины."""
         for i in indexies:
-            if self.vertex[i] == None:
+            if self.vertex[i] is None:
                 return False
         return True
