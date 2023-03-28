@@ -60,7 +60,7 @@ class SimpleGraph:
             return []
 
         if VFrom == VTo:
-            return []
+            return [self.vertex[VFrom]]
 
         full_path = self._depth_first_search(VFrom, VTo, [])
 
