@@ -7,7 +7,7 @@ class Vertex:
 
 class SimpleGraph:
 
-    def __init__(self, size):
+    def __init__(self, size: int):
         self.max_vertex = size
         self.m_adjacency = [[0] * size for _ in range(size)]
         self.vertex: list[Vertex] = [None] * size
@@ -19,7 +19,7 @@ class SimpleGraph:
 
         self.vertex[index_of_empty] = Vertex(v)
 
-    def RemoveVertex(self, v):
+    def RemoveVertex(self, v: int):
         if not self._are_indexies_ok(v):
             return
 
@@ -29,13 +29,13 @@ class SimpleGraph:
 
         self.vertex[v] = None
 
-    def IsEdge(self, v1, v2):
+    def IsEdge(self, v1: int, v2: int):
         if not self._are_indexies_ok(v1, v2):
             return None
 
         return self.m_adjacency[v1][v2] > 0
 
-    def AddEdge(self, v1, v2):
+    def AddEdge(self, v1: int, v2: int):
         if not self._are_indexies_ok(v1, v2):
             return None
 
@@ -46,7 +46,7 @@ class SimpleGraph:
         if v1 != v2:
             self.m_adjacency[v2][v1] += 1
 
-    def RemoveEdge(self, v1, v2):
+    def RemoveEdge(self, v1: int, v2: int):
         if not self._are_indexies_ok(v1, v2):
             return None
 
@@ -55,44 +55,48 @@ class SimpleGraph:
             if v1 != v2:
                 self.m_adjacency[v2][v1] -= 1
 
-    def DepthFirstSearch(self, VFrom, VTo):
+    def DepthFirstSearch(self, VFrom: int, VTo: int):
+        for v in self.vertex:
+            if v is not None:
+                v.Hit = False
+
         if not self._are_indexies_ok(VFrom, VTo):
             return []
 
         full_path = self._depth_first_search(VFrom, VTo, [])
 
-        for v in self.vertex:
-            v.Hit = False
-
         return full_path
 
-    def _get_related_vertexes(self, vertex_index):
+    def _get_related_vertexes(self, vertex_index: int):
         relate = [i for i in range(len(self.m_adjacency[vertex_index])) if
                   self.m_adjacency[vertex_index][i] == 1]
 
         return relate
 
-    def _depth_first_search(self, currV, VTo: Vertex, path):
+    def _depth_first_search(self, currV: int, VTo: int, path: list[int]):
         self.vertex[currV].Hit = True
         path.append(self.vertex[currV])
 
-        related: list[Vertex] = self._get_related_vertexes(currV)
-
-        if len(related) == 0:
-            return []
+        related = self._get_related_vertexes(currV)
 
         if VTo in related:
+            self.vertex[VTo].Hit = True
             path.append(self.vertex[VTo])
             return path
 
-        path_ = []
+        path_ = path[:]
+
         for v in related:
-            if self.vertex[v].Hit is False:
-                path_ = self._depth_first_search(v, VTo, path)
-            if len(path_) != 0:
+            if self.vertex[v].Hit is True:
+                continue
+            path_ = (self._depth_first_search(v, VTo, path_))
+
+            if self.vertex.index(path_[-1]) == VTo:
                 return path_
 
-        return []
+        path.pop()
+
+        return path
 
     def _get_empty(self):
         for i in range(len(self.vertex)):
@@ -100,21 +104,21 @@ class SimpleGraph:
                 return i
         return None
 
-    def _are_indexies_ok(self, *indexies):
+    def _are_indexies_ok(self, *indexies : int):
         if not self._are_indexies_in_range(*indexies):
             return False
         if not self._are_there_vertexes(*indexies):
             return False
         return True
 
-    def _are_indexies_in_range(self, *indexies):
+    def _are_indexies_in_range(self, *indexies: int):
         """Проверяет, умещаются ли индексы в размер графа."""
         for i in indexies:
             if i > len(self.vertex) - 1:
                 return False
         return True
 
-    def _are_there_vertexes(self, *indexies):
+    def _are_there_vertexes(self, *indexies: int):
         """Проверяет, сушествуют ли вершины."""
         for i in indexies:
             if self.vertex[i] is None:
