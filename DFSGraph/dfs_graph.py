@@ -59,9 +59,6 @@ class SimpleGraph:
         if not self._are_indexies_ok(VFrom, VTo):
             return []
 
-        if VFrom == VTo:
-            return [self.vertex[VFrom]]
-
         full_path = self._depth_first_search(VFrom, VTo, [])
 
         for v in self.vertex:

@@ -66,7 +66,7 @@ def test_dfs_2():
 
     assert g.DepthFirstSearch(0, 3) == [g.vertex[0], g.vertex[3]]
     assert g.DepthFirstSearch(0, 4) == [g.vertex[0], g.vertex[1], g.vertex[4]]
-    assert g.DepthFirstSearch(3, 3) == [g.vertex[3]]
+    assert g.DepthFirstSearch(3, 3) == [g.vertex[3], g.vertex[3]]
     assert g.DepthFirstSearch(3, 1) == [g.vertex[3], g.vertex[1]]
 
 
