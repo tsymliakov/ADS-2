@@ -77,23 +77,22 @@ class SimpleGraph:
         return relate
 
     def _depth_first_search(self, currV, VTo: Vertex, path):
-        if self.vertex[currV].Hit is True:
-            return []
-
         self.vertex[currV].Hit = True
-        path.append(currV)
+        path.append(self.vertex[currV])
 
-        related = self._get_related_vertexes(currV)
+        related: list[Vertex] = self._get_related_vertexes(currV)
 
         if len(related) == 0:
             return []
 
         if VTo in related:
-            path.append(VTo)
+            path.append(self.vertex[VTo])
             return path
 
-        for vertex in related:
-            path_ = self._depth_first_search(vertex, VTo, path)
+        path_ = []
+        for v in related:
+            if self.vertex[v].Hit is False:
+                path_ = self._depth_first_search(v, VTo, path)
             if len(path_) != 0:
                 return path_
 
