@@ -18,7 +18,6 @@ class SimpleGraph:
             return
 
         self.vertex[index_of_empty] = Vertex(v)
-        print()
 
     def RemoveVertex(self, v):
         if not self._are_indexies_ok(v):
