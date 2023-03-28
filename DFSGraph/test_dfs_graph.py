@@ -127,7 +127,7 @@ def test_dfs_5():
     assert g.DepthFirstSearch(0, 3) == [g.vertex[0], g.vertex[1], g.vertex[3]]
 
 
-def test_dfs_addotional():
+def test_dfs_additional():
     g = SimpleGraph(5)
 
     g.AddVertex(0)  # A
