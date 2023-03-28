@@ -104,7 +104,7 @@ class SimpleGraph:
                 return i
         return None
 
-    def _are_indexies_ok(self, *indexies : int):
+    def _are_indexies_ok(self, *indexies: int):
         if not self._are_indexies_in_range(*indexies):
             return False
         if not self._are_there_vertexes(*indexies):
