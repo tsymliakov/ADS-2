@@ -69,7 +69,7 @@ class SimpleGraph:
 
     def _get_related_vertexes(self, vertex_index: int):
         relate = [i for i in range(len(self.m_adjacency[vertex_index])) if
-                  self.m_adjacency[vertex_index][i] == 1]
+                  self.m_adjacency[vertex_index][i] >= 1]
 
         return relate
 

@@ -145,4 +145,10 @@ def test_dfs_additional():
     g.AddEdge(3, 4)
     g.AddEdge(3, 3)
 
+    g.AddEdge(1, 0)
+
     assert g.DepthFirstSearch(0, 4) == [g.vertex[0], g.vertex[1], g.vertex[4]]
+    assert g.DepthFirstSearch(0, 1) == [g.vertex[0], g.vertex[1]]
+    assert g.DepthFirstSearch(0, 3) == [g.vertex[0], g.vertex[3]]
+    assert g.DepthFirstSearch(0, 2) == [g.vertex[0], g.vertex[2]]
+    assert g.DepthFirstSearch(2, 1) == [g.vertex[2], g.vertex[0], g.vertex[1]]
