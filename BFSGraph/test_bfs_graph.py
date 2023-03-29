@@ -363,7 +363,7 @@ def test_bfs_simple():
         g.vertex[2],
         g.vertex[3],
         g.vertex[4],
-        g.vertex[5],
+        g.vertex[5]
     ]
 
 
@@ -417,7 +417,7 @@ def test_bfs_loops():
         g.vertex[2],
         g.vertex[3],
         g.vertex[4],
-        g.vertex[5],
+        g.vertex[5]
     ]
 
 
@@ -442,13 +442,12 @@ def test_bfs_cycles_1():
     g.AddEdge(3, 0)
     g.AddEdge(4, 0)
 
+    res = g.BreadthFirstSearch(0, 5)
+
     assert g.BreadthFirstSearch(0, 5) == [
         g.vertex[0],
-        g.vertex[1],
-        g.vertex[2],
-        g.vertex[3],
         g.vertex[4],
-        g.vertex[5],
+        g.vertex[5]
     ]
 
 
@@ -474,5 +473,42 @@ def test_bfs_cycles_2():
         g.vertex[1],
         g.vertex[2],
         g.vertex[3],
-        g.vertex[5],
+        g.vertex[5]
+    ]
+
+
+def test_bfs_multiple_edges_cycles_loops():
+    g = SimpleGraph(6)
+
+    g.AddVertex(0)
+    g.AddVertex(1)
+    g.AddVertex(2)
+    g.AddVertex(3)
+    g.AddVertex(4)
+    g.AddVertex(5)
+
+    g.AddEdge(0, 1)
+    g.AddEdge(0, 1)
+    g.AddEdge(1, 2)
+    g.AddEdge(1, 2)
+    g.AddEdge(2, 3)
+    g.AddEdge(2, 3)
+    g.AddEdge(3, 4)
+    g.AddEdge(3, 4)
+    g.AddEdge(4, 1)
+    g.AddEdge(4, 1)
+    g.AddEdge(3, 5)
+    g.AddEdge(3, 5)
+    g.AddEdge(4, 5)
+    g.AddEdge(4, 5)
+
+    g.AddEdge(5, 5)
+    g.AddEdge(4, 4)
+    g.AddEdge(2, 2)
+
+    assert g.BreadthFirstSearch(0, 5) == [
+        g.vertex[0],
+        g.vertex[1],
+        g.vertex[4],
+        g.vertex[5]
     ]

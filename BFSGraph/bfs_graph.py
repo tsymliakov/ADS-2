@@ -5,7 +5,7 @@ class Vertex:
         self.Hit = False
 
     def __repr__(self) -> str:
-        return str(self.Value)
+        return f"Vertex {self.Value}"
 
 
 class SimpleGraph:
@@ -79,27 +79,34 @@ class SimpleGraph:
             return []
 
         self.vertex[VFrom].Hit = True
-        result = self._breadth_first_search(VFrom, VTo, [VFrom])
+        pathes = self._breadth_first_search(VFrom, VTo, [VFrom], [], {})
 
         self._unhit()
 
-        return result
+        return pathes[VTo]
 
-    def _breadth_first_search(self, currV: int, VTo: int, q: list[int]):
+    def _breadth_first_search(self, currV: int, VTo: int, q: list[int],
+                              prev_vertecies: list[int], pathes: dict):
         q.pop(0)
 
         unvisited_related = self._get_unvisited_related(currV)
 
         for v in unvisited_related:
+            # if v == VTo:
+            #     return [self.vertex[currV], self.vertex[v]]
+            if pathes.get(v) is None:
+                pathes[v] = prev_vertecies + [self.vertex[currV], self.vertex[v]]
             if v == VTo:
-                return [self.vertex[currV], self.vertex[v]]
+                return pathes
             self.vertex[v].Hit = True
             q.append(v)
 
         if len(q) == 0:
-            return []
+            return pathes
 
-        return [self.vertex[currV]] + self._breadth_first_search(q[0], VTo, q)
+        
+
+        return self._breadth_first_search(q[0], VTo, q, prev_vertecies[:] + [self.vertex[currV]], pathes)
 
     def _get_unvisited_related(self, vertex_index: int):
         if vertex_index is None:
