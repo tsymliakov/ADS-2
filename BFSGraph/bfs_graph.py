@@ -79,7 +79,7 @@ class SimpleGraph:
             return []
 
         self.vertex[VFrom].Hit = True
-        pathes = self._breadth_first_search(VFrom, VTo, [VFrom], [], {})
+        pathes = self._breadth_first_search(VFrom, VTo, [VFrom], [self.vertex[VFrom]], {})
 
         self._unhit()
 
@@ -95,7 +95,7 @@ class SimpleGraph:
             # if v == VTo:
             #     return [self.vertex[currV], self.vertex[v]]
             if pathes.get(v) is None:
-                pathes[v] = prev_vertecies + [self.vertex[currV], self.vertex[v]]
+                pathes[v] = prev_vertecies + [self.vertex[v]]
             if v == VTo:
                 return pathes
             self.vertex[v].Hit = True
@@ -104,9 +104,9 @@ class SimpleGraph:
         if len(q) == 0:
             return pathes
 
-        
+        # p1 = pathes.get(q[0])
 
-        return self._breadth_first_search(q[0], VTo, q, prev_vertecies[:] + [self.vertex[currV]], pathes)
+        return self._breadth_first_search(q[0], VTo, q, pathes.get(q[0]), pathes)
 
     def _get_unvisited_related(self, vertex_index: int):
         if vertex_index is None:
