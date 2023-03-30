@@ -372,6 +372,7 @@ def test_bfs_simple():
 - Петли
 - Циклы
 - Множественные ребра между двумя нодами
+- Не полностью заполненный граф
 - Несвязный граф, в котором стартовая нода и искомая ноды находятся в
 разных подграфах
 """
@@ -511,4 +512,98 @@ def test_bfs_multiple_edges_cycles_loops():
         g.vertex[1],
         g.vertex[4],
         g.vertex[5]
+    ]
+
+
+def test_bfs_multiple_edges_cycles_loops_not_full():
+    g = SimpleGraph(10)
+
+    g.AddVertex(0)
+    g.AddVertex(1)
+    g.AddVertex(2)
+    g.AddVertex(3)
+    g.AddVertex(4)
+    g.AddVertex(5)
+
+    g.AddEdge(0, 1)
+    g.AddEdge(0, 1)
+    g.AddEdge(1, 2)
+    g.AddEdge(1, 2)
+    g.AddEdge(2, 3)
+    g.AddEdge(2, 3)
+    g.AddEdge(3, 4)
+    g.AddEdge(3, 4)
+    g.AddEdge(4, 1)
+    g.AddEdge(4, 1)
+    g.AddEdge(3, 5)
+    g.AddEdge(3, 5)
+    g.AddEdge(4, 5)
+    g.AddEdge(4, 5)
+
+    g.AddEdge(5, 5)
+    g.AddEdge(4, 4)
+    g.AddEdge(2, 2)
+
+    assert g.BreadthFirstSearch(0, 5) == [
+        g.vertex[0],
+        g.vertex[1],
+        g.vertex[4],
+        g.vertex[5]
+    ]
+
+
+def test_bfs_multiple_edges_cycles_loops_not_full():
+    g = SimpleGraph(10)
+
+    g.AddVertex(0)
+    g.AddVertex(1)
+    g.AddVertex(2)
+    g.AddVertex(3)
+    g.AddVertex(4)
+    g.AddVertex(5)
+
+    g.AddEdge(0, 1)
+    g.AddEdge(0, 1)
+    g.AddEdge(1, 2)
+    g.AddEdge(1, 2)
+    g.AddEdge(2, 3)
+    g.AddEdge(2, 3)
+    g.AddEdge(3, 4)
+    g.AddEdge(3, 4)
+    g.AddEdge(4, 1)
+    g.AddEdge(4, 1)
+    g.AddEdge(3, 5)
+    g.AddEdge(3, 5)
+    g.AddEdge(4, 5)
+    g.AddEdge(4, 5)
+
+    g.AddEdge(5, 5)
+    g.AddEdge(4, 4)
+    g.AddEdge(2, 2)
+
+    g.AddVertex(6)
+    g.AddVertex(7)
+    g.AddVertex(8)
+    g.AddVertex(9)
+
+    g.AddEdge(6, 7)
+    g.AddEdge(8, 9)
+
+    assert g.BreadthFirstSearch(0, 5) == [
+        g.vertex[0],
+        g.vertex[1],
+        g.vertex[4],
+        g.vertex[5]
+    ]
+
+    assert g.BreadthFirstSearch(0, 7) == []
+    assert g.BreadthFirstSearch(6, 9) == []
+
+    g.AddEdge(7, 8)
+
+    assert g.BreadthFirstSearch(6, 9) == [
+        g.vertex[6],
+        g.vertex[7],
+        g.vertex[8],
+        g.vertex[9]
     ]
