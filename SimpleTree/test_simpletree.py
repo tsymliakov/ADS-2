@@ -1,6 +1,95 @@
 from simpletree import SimpleTree, SimpleTreeNode
 
 
+def test_is_symmetric_1():
+    root = SimpleTreeNode(1)
+    tree = SimpleTree(root)
+
+    child_1_lvl_1 = SimpleTreeNode(1)
+    child_2_lvl_1 = SimpleTreeNode(2)
+    child_3_lvl_1 = SimpleTreeNode(1)
+    child_4_lvl_1 = SimpleTreeNode(2)
+
+    tree.AddChild(root, child_1_lvl_1)
+    tree.AddChild(root, child_2_lvl_1)
+    tree.AddChild(root, child_3_lvl_1)
+    tree.AddChild(root, child_4_lvl_1)
+
+    assert tree.is_symmetric()
+
+
+def test_is_symmetric_2():
+    root = SimpleTreeNode(1)
+    tree = SimpleTree(root)
+
+    child_1_lvl_1 = SimpleTreeNode(1)
+    child_2_lvl_1 = SimpleTreeNode(2)
+    child_3_lvl_1 = SimpleTreeNode(1)
+    child_4_lvl_1 = SimpleTreeNode(3)
+
+    tree.AddChild(root, child_1_lvl_1)
+    tree.AddChild(root, child_2_lvl_1)
+    tree.AddChild(root, child_3_lvl_1)
+    tree.AddChild(root, child_4_lvl_1)
+
+    assert not tree.is_symmetric()
+
+
+def test_is_symmetric_3():
+    root = SimpleTreeNode(1)
+    tree = SimpleTree(root)
+
+    child_1_lvl_1 = SimpleTreeNode(1)
+    child_2_lvl_1 = SimpleTreeNode(2)
+
+    tree.AddChild(root, child_1_lvl_1)
+    tree.AddChild(root, child_2_lvl_1)
+
+    assert not tree.is_symmetric()
+
+
+def test_is_symmetric_4():
+    root = SimpleTreeNode(1)
+    tree = SimpleTree(root)
+
+    child_1_lvl_1 = SimpleTreeNode(1)
+    child_2_lvl_1 = SimpleTreeNode(1)
+    child_1_lvl_2 = SimpleTreeNode(1)
+    child_2_lvl_2 = SimpleTreeNode(2)
+    child_3_lvl_2 = SimpleTreeNode(1)
+    child_4_lvl_2 = SimpleTreeNode(2)
+
+    tree.AddChild(root, child_1_lvl_1)
+    tree.AddChild(root, child_2_lvl_1)
+    tree.AddChild(child_1_lvl_1, child_1_lvl_2)
+    tree.AddChild(child_1_lvl_1, child_2_lvl_2)
+    tree.AddChild(child_2_lvl_1, child_3_lvl_2)
+    tree.AddChild(child_2_lvl_1, child_4_lvl_2)
+
+    assert tree.is_symmetric()
+
+
+def test_is_symmetric_5():
+    root = SimpleTreeNode(1)
+    tree = SimpleTree(root)
+
+    child_1_lvl_1 = SimpleTreeNode(1)
+    child_2_lvl_1 = SimpleTreeNode(1)
+    child_1_lvl_2 = SimpleTreeNode(1)
+    child_2_lvl_2 = SimpleTreeNode(2)
+    child_3_lvl_2 = SimpleTreeNode(1)
+    child_4_lvl_2 = SimpleTreeNode(3)
+
+    tree.AddChild(root, child_1_lvl_1)
+    tree.AddChild(root, child_2_lvl_1)
+    tree.AddChild(child_1_lvl_1, child_1_lvl_2)
+    tree.AddChild(child_1_lvl_1, child_2_lvl_2)
+    tree.AddChild(child_2_lvl_1, child_3_lvl_2)
+    tree.AddChild(child_2_lvl_1, child_4_lvl_2)
+
+    assert not tree.is_symmetric()
+
+
 # Test creation and child addition
 def test_create_simpletree():
     root = SimpleTreeNode(1)
@@ -82,7 +171,7 @@ def test_get_cont_nodes():
     founded_nodes = tree.GetAllNodes()
 
     assert len(founded_nodes) == len(nodes)
-    
+
     for node in nodes:
         assert node in founded_nodes
 
